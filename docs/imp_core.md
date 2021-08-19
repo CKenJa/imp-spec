@@ -1,48 +1,48 @@
-# IMP Core Standards (IMP-Core)
+# IMP 標準コア(IMP-Core)
 
-These are the bare minimum standards for a datapack module to be considered IMP-compliant.
+以下はデータパック・モジュールがIMPに準拠していると言える最低限の基準である。
 
-- [1. Leave vanilla alone](#1-leave-vanilla-alone)
-- [2. Namespace everything](#2-namespace-everything)
-  - [2a. Namespace entity tags](#2a-namespace-entity-tags)
-  - [2b. Namespace custom item tags](#2b-namespace-custom-item-tags)
-  - [2c. Namespace scoreboard objectives](#2c-namespace-scoreboard-objectives)
-  - [2d. Namespace NBT storage locations](#2d-namespace-NBT-storage-locations)
+- [1. バニラには手を付けない](#1-バニラには手を付けない)
+- [2. 全てに名前空間を](#2-全てに名前空間を)
+  - [2a. エンティティタグの名前空間](#2a-エンティティタグの名前空間)
+  - [2b. カスタムアイテムタグの名前空間](#2b-カスタムアイテムタグの名前空間)
+  - [2c. スコアボードオブジェクトの名前空間](#2c-スコアボードオブジェクトの名前空間)
+  - [2d. storageの名前空間](#2d-storageの名前空間)
 
-## 1. Leave vanilla alone
+## 1. バニラには手を付けない
 
-Definition:
+意味:
 
-- Avoid changing anything under the vanilla `minecraft` namespace, where possible.
+- 出来る限りバニラの`minecraft`名前空間下のものを変更しないこと。
 
-Rationale:
+根拠:
 
-- Avoids causing confusion over what is provided by vanilla.
-- Avoids the risk of unintentionally inheriting/overwriting future behaviour.
+- バニラの要素上で競合が起こることを回避できる
+- 将来追加される機能を意図せず使用/上書きするリスクを回避できる
 
-Caveats:
+警告:
 
-- Some data cannot be extended and must be overwritten to change functionality, such as the vanilla loot tables. In these unfortunate cases it may be necessary to overwrite data. This is acceptable so long as it is clearly documented.
-- Tagging your functions/blocks/etc with vanilla tags is perfectly acceptable (and necessary for certain functionality), but replacing them (via `"replace": true`) is almost always a very bad thing to do.
+- バニラのルートテーブルなどタグなどと違って機能拡張できず、上書きしかできない。どうしても上書きしたい場合は明確に文章化している限り許容される。
+- 関数/ブロックにバニラタグをつけるのは問題ない。ただし(`"replace": true`などで)上書きするのはほとんどの場合避けるべき。
 
-Recommendations:
+推奨事項:
 
-- In cases where vanilla data must be overwritten (such as loot tables), attempt to abstract the changes as clearly as possible.
-  - For example, with loot tables: instead of writing your custom loot in the vanilla loot table directly, write a custom loot table under your namespace and include it as a single entry in the vanilla loot table. This makes it easier to adapt in the future and provides a clean way for other packs to account for.
-- Overall, treat the vanilla namespace as you would any other pack. Be courteous of other pack authors, and keep in mind that your pack may not necessarily be the only one running.
+- バニラデータを上書きする必要がある場合(ルートテーブルなど)は、変更を出来るだけ明確に抽象化するように。
+  - ルートテーブルの場合の例：バニラルートテーブルにカスタムアイテムのNBT等を直接書き込む代わりに、名前空間下にカスタム戦利品テーブルを作り、バニラルートテーブルから参照する。これにより将来の変更が容易になり、他のパックが干渉しやすくなる。
+- 全体として他のデータパックもバニラ名前空間と同じように扱ってかうように。他のパック制作者に礼儀正しく、必ずしも自分のパックだけが実行されているとは限らないと考えるように。
 
-## 2. Namespace everything
+## 2. 全てに名前空間を
 
-### 2a. Namespace entity tags
+### 2a. エンティティタグの名前空間
 
-Definition:
+意味:
 
-- All entity tags are prefixed with and delimited by the module namespace.
-- (Note: entity tags are those assigned to an entity with the `tag` command and stored inside its `Tags` NBT.)
+- 全てのエンティティタグにはモジュール名前空間の接頭辞と区切りが付けられます
+- (ノート: エンティティタグ `tag`コマンドで扱う、`Tags`NBT内に保存されるタグです)
 
-Rationale:
+根拠:
 
-- Effectively eliminates the chance of entity tag conflicts with other compliant modules.
+- 他の準拠モジュールとエンティティタグの競合を効果的に回避できる。
 - Drastically reduces the chance of entity tag conflicts with packs that do not follow any standards.
 
 Caveats:
