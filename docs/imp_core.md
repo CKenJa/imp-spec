@@ -6,14 +6,14 @@
 - [2. 全てに名前空間を](#2-全てに名前空間を)
   - [2a. エンティティタグの名前空間](#2a-エンティティタグの名前空間)
   - [2b. カスタムアイテムタグの名前空間](#2b-カスタムアイテムタグの名前空間)
-  - [2c. スコアボードオブジェクトの名前空間](#2c-スコアボードオブジェクトの名前空間)
+  - [2c. スコアボードのオブジェクトの名前空間](#2c-スコアボードオブジェクトの名前空間)
   - [2d. storageの名前空間](#2d-storageの名前空間)
 
 ## 1. バニラには手を付けない
 
-意味:
+定義:
 
-- 出来る限りバニラの`minecraft`名前空間下のものを変更しないこと。
+- 出来る限りバニラの「`minecraft`」名前空間下のものを変更しないこと。
 
 根拠:
 
@@ -35,94 +35,104 @@
 
 ### 2a. エンティティタグの名前空間
 
-意味:
+定義:
 
-- 全てのエンティティタグにはモジュール名前空間の接頭辞と区切りが付けられます
+- 全てのエンティティタグにはモジュール名前空間の接頭辞と区切りが付けられる。
 - (ノート: エンティティタグ `tag`コマンドで扱う、`Tags`NBT内に保存されるタグです)
 
 根拠:
 
-- 他の準拠モジュールとエンティティタグの競合を効果的に回避できる。
-- Drastically reduces the chance of entity tag conflicts with packs that do not follow any standards.
+- 他の準拠モジュールのエンティティタグが競合する効果的に回避できる。
+- 規格に準拠しないパックのエンティティタグが競合する可能性を大幅に下げられる。
 
-Caveats:
+注意事項:
 
-- The character `:` is not supported in all the same places tags are and thus cannot be used as a namespace delimiter.
+- 文字「:」は名前空間の区切り字として使用することはできません。[未翻訳]
 
-Recommendations:
+推奨事項:
 
-- Use `.` as the delimiter for both the namespace and different levels of tags, and use `_` for separating words (snake_case).
-- Be verbose with your tags. Do not sacrifice your project's readability in the never-ending struggle for micro-optimization. If performance ever becomes a concern, run your pack through a minimizer and distribute the minimized version to your end users.
+- 名前空間と異なる階層のタグの両方の区切り文字として「`.`」を使い、単語の区切り字として「`_`」を使う(snake_case)。
+- タグは冗長であること。最適化のためにプロジェクトの可読性を犠牲にしない。もしパフォーマンスが気になるなら、最適化ソフトを使い、最適化したものをエンドユーザー配布してください。
+(エンドユーザー: データパックを実際に使ったり遊んだりする人のこと)
 
-Examples:
+例:
 
-- Bad: `PlaytrackerIgnore`
-- Bad: `playtracker_ignore`
-- Good: `playtracker.ignore`
-- Good: `playtracker.talked_to_villager`
-- Good: `playtracker.sneaking.stopped`
+- 悪: `PlaytrackerIgnore`
+- 悪: `playtracker_ignore`
+- 正: `playtracker.ignore`
+- 正: `playtracker.talked_to_villager`
+- 正: `playtracker.sneaking.stopped`
 
-### 2b. Namespace custom item tags
+### 2b. カスタムアイテムタグの名前空間
 
-Definition:
+意味:
 
-- All custom item tags are contained inside an NBT compound that is named after and dedicated to the module.
-- The dedicated NBT compound is prefixed or exists within another compound with a naming convention that does not conflict with vanilla.
-- (Note: custom item tags are any non-vanilla tags stored within an item's `tag` NBT.)
+- すべてのカスタムアイテムタグフあ、モジュールにちなんで名づけられた専用NBT compoundの中に含まれる。
+- (訳者追記: NBT compoundはNBTの**中括弧{}で囲まれた、中に複数のデータが入る配列のこと。**リスト[]ではない。)
+- 専用NBT compoundは接頭辞か、ほかのバニラと競合しない命名規則で名付けられているcompound内に存在する。
+- (注記: カスタムアイテムタグとは、アイテムの「`tag`」NBT内のバニラ以外のタグのこと。)
+- (訳者追記: アイテムの「`tag`」NBT内は、好きなNBTを入れることができる。)
 
-Rationale:
+根拠:
 
-- Effectively eliminates the chance of custom item tag conflicts with other compliant modules.
-- Drastically reduces the chance of custom item tag conflicts with packs that do not follow any standards.
-- Drastically reduces the chance of custom item tag conflicts with any current and/or future vanilla NBT.
+- 他の準拠モジュールとカスタムアイテムタグが競合する可能性を効果的に下げられる。
+- 規格に準拠しないパックのカスタムアイテムタグが競合する可能性を大幅に下げられる。
+- 現在・将来のバニラNBTとカスタムアイテムタグが競合する可能性を大幅に下げられる。
 
-Caveats:
+注意事項:
 
-- The `CustomModelData` tag is a vanilla tag and is not part of this specification.
+- 「`CustomModelData`」はバニラタグであり、カスタムアイテムタグとは別物のため、この仕様に含まれない。.
 
-Recommendations:
+推奨:
 
-- Prefix your NBT compound with an underscore `_<namespace>` or keep it within another custom compound `__custom__.<namespace>` to help ensure that it remains separate from vanilla tags.
+- NBT compoundの先頭にアンダースコアをつける(\_名前空間)か、別のカスタムcompound「`__custom__.名前空間`」の中に入れておくと、バニラタグから分離された状態を維持することができる
 
-Examples:
+例:
 
-- Bad: `{tag: {fire_wand: true}}`
-- Bad: `{tag: {_fire_wand: true}}`
-- Bad: `{tag: {mystuff: {fire_wand: true}}}`
-- Good: `{tag: {_mystuff: {fire_wand: true}}}`
-- Good: `{tag: {__custom__: {mystuff: {fire_wand: true}}}}`
+- 悪: `{tag: {fire_wand: true}}`
+- 悪: `{tag: {_fire_wand: true}}`
+- 悪: `{tag: {mystuff: {fire_wand: true}}}`
+- 正: `{tag: {_mystuff: {fire_wand: true}}}`
+- 正: `{tag: {__custom__: {mystuff: {fire_wand: true}}}}`
 
-### 2c. Namespace scoreboard objectives
+### 2c. スコアボードのオブジェクトの名前空間
 
-Definition:
+定義:
 
-- All scoreboard objectives are prefixed with a _scorespace_: an abbreviated version of the module namespace that accounts for the 16-character limit on objective names.
+- すべてのスコアボードのオブジェクトには、接頭辞としてスコア空間:が付けられる。これはオブジェクト名が16文字までであることを考慮した、モジュールの名前空間の省略版でよい。
+- (訳者追記: 要するに、名前空間の代わりに短くしたもの(スコア空間)を使うということ。例えば私は名前空間にckenja:を使うのでスコア空間にはckj:などを使う)
+- (訳者追記: スコアボードのオブジェクトがわからない人もいるだろう。scoreboardコマンドを実行するときに必要なスコア名だ。
+- (　　　　  `scoreboard objectives add \[ここだよ!\]`
+- (　　　　  `scoreboard players set \[ここだよ!\] @s` )
+- (訳者追記: 1.18より、オブジェクト名の16文字の制限が撤廃された。これにより省略版ではなく完全版のモジュールの名前空間を記載することができるようになった。
+-  　　　　  ただし、後方互換性を考慮すると、1.18以降でしか絶対に動かないパック以外はこれまで通り16文字以内のオブジェクト名をつけるといいだろう)
 
-Rationale:
+根拠:
 
-- Effectively eliminates\* the chance of scoreboard objective conflicts with other compliant modules.
-- Drastically reduces the chance of scoreboard objective conflicts with packs that do not follow any standards.
-- Introduces a level of scope to scoreboard operations, allowing fake-player variable names to be shortened.
+- 他の準拠モジュールとスコアボードのオブジェクトが競合する可能性をほぼなくせる。
+- 規格に準拠しないパックとスコアボードのオブジェクトが競合する可能性を大幅に下げられる。
+- スコアボード操作にスコープを導入し、ダミープレイヤーの変数名を短縮できるようになる。
+- (訳者追記: ダミープレイヤーの変数名とは、scoreboardのセレクタなどの代わりに#や$から始まるプレイヤー名を使うこと。#や$から始まるプレイヤー名は存在しないので、エンティティがいなくても変数として使える)
 
-Caveats:
+警告:
 
-- \*Because the names of scoreboard objectives are limited in length, the number of possible scorespaces is much smaller than the number of possible namespaces. Therefore, the chance of a collision between two scorespaces is higher than it would be with the full namespaces.
+- \*スコアボードのオブジェクト名前は長さに制限があるため、使えるスコア空間の長さは名前空間の長さよりはるかに短い。よって二つのスコア空間が競合する可能性は完全な名前空間の場合よりも高くなる。
 
-Recommendations:
+推奨:
 
-- Use a scorespace that is easily associated with the full namespace of the module. Avoid abbreviations that are too short or generic.
-- Do not assume that just because the objective is named something obvious it will not be (mis)used by other packs. For example: the objective `global` is commonly used to register global variables, but this is precisely what makes it all the more susceptible to conflicts. A compliant module will use its own objective, such as `<scorespace>.global`, to both avoid conflicts and shorten the names of fake-players.
+- モジュールの完全な名前空間の省略版と容易に連想できるスコア空間を使う。短すぎる略語や一般的な単語になる略語は避ける。
+- オブジェクトが明白な名前だからと言って、それがほかのパックに(間違って)使われることはないと思ってはいけない。例えば`global`というオブジェクトは一般的にグローバル変数を登録するために使われやすく、競合しやすい。準拠したモジュールでは、`[スコア空間].global`のような独自のオブジェクトを使って競合を回避し、ダミープレイヤーの名前を短くすることができる。
 
-Examples:
+例:
 
-- Bad: `global`
-- Bad: `temp`
-- Bad: `const`
-- Bad: `ptrak_config`
-- Good: `ptrak.config`
-- Good: `ptrak.deathtime`
-- Good: `ptrak.sincerest`
-- Good: `ptrak.usebow`
+- 悪: `global`
+- 悪: `temp`
+- 悪: `const`
+- 悪: `ptrak_config`
+- 正: `ptrak.config`
+- 正: `ptrak.deathtime`
+- 正: `ptrak.sincerest`
+- 正: `ptrak.usebow`
 
 ### 2d. Namespace NBT storage locations
 
