@@ -105,7 +105,7 @@
 - (　　　　  `scoreboard objectives add \[ここだよ!\]`
 - (　　　　  `scoreboard players set \[ここだよ!\] @s` )
 - (訳者追記: 1.18より、オブジェクト名の16文字の制限が撤廃された。これにより省略版ではなく完全版のモジュールの名前空間を記載することができるようになった。
--  　　　　  ただし、後方互換性を考慮すると、1.18以降でしか絶対に動かないパック以外はこれまで通り16文字以内のオブジェクト名をつけるといいだろう)
+   　　　　  ただし、後方互換性を考慮すると、1.18以降でしか絶対に動かないパック以外はこれまで通り16文字以内のオブジェクト名をつけるといいだろう)
 
 根拠:
 
@@ -134,11 +134,11 @@
 - 正: `ptrak.sincerest`
 - 正: `ptrak.usebow`
 
-### 2d. Namespace NBT storage locations
+### 2d. storageの名前空間
 
-Definition:
+定義:
 
-- All NBT storage locations use the module namespace as part of their own namespace.
+- 全てのNBT storageの場所はそのモジュールの名前空間を使う。as part of their own namespace.
 
 Rationale:
 
